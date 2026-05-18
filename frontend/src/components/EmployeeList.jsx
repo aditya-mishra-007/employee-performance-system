@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const EmployeeList = ({ employees, onSearch, onSelectAI, onTriggerBasicMatch, onTriggerAIShortlist }) => {
+const EmployeeList = ({ employees, onSearch, onSelectAI, onTriggerBasicMatch, onTriggerAIShortlist, onDeleteEmployee }) => {
     const [searchDept, setSearchDept] = useState('');
 
     const handleSearchSubmit = (e) => {
@@ -16,7 +16,6 @@ const EmployeeList = ({ employees, onSearch, onSelectAI, onTriggerBasicMatch, on
                     <p className="text-white/40 text-xs mt-0.5">Real-time analytical mapping indices</p>
                 </div>
                 
-                {/* Search, Filter, and Custom Matching Actions Component Tray */}
                 <div className="flex flex-wrap items-center gap-3 w-full xl:w-auto">
                     <form onSubmit={handleSearchSubmit} className="flex gap-2 flex-1 sm:flex-initial">
                         <input 
@@ -31,22 +30,20 @@ const EmployeeList = ({ employees, onSearch, onSelectAI, onTriggerBasicMatch, on
                         </button>
                     </form>
 
-                    {/* ======= MATCHING ACTIONS BUTTON TRAY IMPLEMENTATION ======= */}
                     <div className="flex items-center gap-2">
                         <button 
                             onClick={onTriggerBasicMatch}
-                            className="bg-[#090d16] hover:bg-[#111827] border border-white/10 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all duration-150 flex items-center space-x-1.5 tracking-wider active:scale-95"
+                            className="bg-[#090d16] hover:bg-[#111827] border border-white/10 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all duration-150 flex items-center space-x-1.5 tracking-wider"
                         >
                             <span>BASIC MATCH</span> <span>📊</span>
                         </button>
                         <button 
                             onClick={onTriggerAIShortlist}
-                            className="bg-gradient-to-r from-purple-500 to-pink-500 hover:opacity-90 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all duration-150 flex items-center space-x-1.5 tracking-wider shadow-[0_0_15px_rgba(236,72,153,0.3)] active:scale-95"
+                            className="bg-gradient-to-r from-purple-500 to-pink-500 hover:opacity-90 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all duration-150 flex items-center space-x-1.5 tracking-wider shadow-[0_0_15px_rgba(236,72,153,0.3)]"
                         >
                             <span>⚙️</span> <span>AI SHORTLIST</span> <span>✨</span>
                         </button>
                     </div>
-                    {/* ========================================================== */}
                 </div>
             </div>
 
@@ -59,7 +56,7 @@ const EmployeeList = ({ employees, onSearch, onSelectAI, onTriggerBasicMatch, on
                             <th className="pb-3 pr-2">Skills Inventory</th>
                             <th className="pb-3 pr-2 text-center">Score</th>
                             <th className="pb-3 pr-2 text-center">Tenure</th>
-                            <th className="pb-3 text-center">Neural Action</th>
+                            <th className="pb-3 text-center">Neural Actions</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-white/5 text-xs">
@@ -92,12 +89,26 @@ const EmployeeList = ({ employees, onSearch, onSelectAI, onTriggerBasicMatch, on
                                     </td>
                                     <td className="py-4 text-center text-slate-300 pr-2">{emp.experience} Yrs</td>
                                     <td className="py-4 text-center">
-                                        <button 
-                                            onClick={() => onSelectAI(emp._id)} 
-                                            className="bg-[#020617] hover:bg-cyan-500 hover:text-black border border-cyan-500/40 text-cyan-400 text-[11px] font-bold px-3 py-1.5 rounded-lg transition-all shadow-sm duration-200 tracking-wider uppercase whitespace-nowrap"
-                                        >
-                                            Run Core AI
-                                        </button>
+                                        <div className="flex items-center justify-center gap-2">
+                                            <button 
+                                                onClick={() => onSelectAI(emp._id)} 
+                                                className="bg-[#020617] hover:bg-cyan-500 hover:text-black border border-cyan-500/40 text-cyan-400 text-[11px] font-bold px-2.5 py-1.5 rounded-lg transition-all duration-200 tracking-wider uppercase whitespace-nowrap"
+                                            >
+                                                Run AI
+                                            </button>
+                                            {/* ======= NEW ACTIONABLE DELETE BUTTON MODULE ======= */}
+                                            <button 
+                                                onClick={() => {
+                                                    if(window.confirm(`Permanently remove ${emp.name} from cloud registry?`)) {
+                                                        onDeleteEmployee(emp._id);
+                                                    }
+                                                }} 
+                                                className="bg-red-500/10 hover:bg-red-600 border border-red-500/30 text-red-400 hover:text-white text-[11px] font-bold px-2.5 py-1.5 rounded-lg transition-all duration-200 tracking-wider uppercase"
+                                            >
+                                                Delete
+                                            </button>
+                                            {/* =================================================== */}
+                                        </div>
                                     </td>
                                 </tr>
                             ))

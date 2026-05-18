@@ -24,12 +24,12 @@ const Chatbot = () => {
         setLoading(true);
 
         try {
-            // Forward message to the free OpenRouter proxy endpoint
-            const res = await axios.post('http://localhost:5000/api/ai/chat', { prompt: input });
+            // Pointed directly to live production conversational AI proxy endpoint
+            const res = await axios.post('https://employee-performance-system-mq1p.onrender.com/api/ai/chat', { prompt: input });
             const botMessage = { role: 'assistant', content: res.data.reply };
             setMessages(prev => [...prev, botMessage]);
         } catch (error) {
-            setMessages(prev => [...prev, { role: 'system', content: 'Connection timed out. Ensure backend chat script hooks are mounted.' }]);
+            setMessages(prev => [...prev, { role: 'system', content: 'Connection timed out. Ensure backend chat script hooks are active on Render.' }]);
         } finally {
             setLoading(false);
         }
@@ -37,22 +37,15 @@ const Chatbot = () => {
 
     return (
         <div className="fixed bottom-6 right-6 z-50 font-sans">
-            {/* Toggle Floating Action Button */}
             <button 
                 onClick={() => setIsOpen(!isOpen)} 
                 className="bg-gradient-to-tr from-indigo-600 to-purple-600 hover:scale-105 text-white p-4 rounded-full shadow-2xl transition duration-200 transform focus:outline-none flex items-center justify-center border border-white/20"
             >
-                {isOpen ? (
-                    <span className="text-xl font-bold">×</span>
-                ) : (
-                    <span className="text-xl">💬</span>
-                )}
+                {isOpen ? <span className="text-xl font-bold">×</span> : <span className="text-xl">💬</span>}
             </button>
 
-            {/* Chat Box Container */}
             {isOpen && (
-                <div className="absolute bottom-16 right-0 w-80 md:w-96 h-[450px] bg-slate-900/95 backdrop-blur-xl border border-white/15 rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-fadeIn">
-                    {/* Header bar */}
+                <div className="absolute bottom-16 right-0 w-80 md:w-96 h-[450px] bg-slate-900/95 backdrop-blur-xl border border-white/15 rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-fadeIn text-left">
                     <div className="bg-gradient-to-r from-indigo-950 to-slate-900 p-4 border-b border-white/10 flex items-center space-x-3">
                         <div className="w-2.5 h-2.5 bg-emerald-400 rounded-full animate-ping"></div>
                         <div>
@@ -61,8 +54,7 @@ const Chatbot = () => {
                         </div>
                     </div>
 
-                    {/* Messages feed area */}
-                    <div className="flex-1 p-4 overflow-y-auto space-y-3 scrollbar-thin text-xs">
+                    <div className="flex-1 p-4 overflow-y-auto space-y-3 text-xs">
                         {messages.map((msg, index) => (
                             <div key={index} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                                 <div className={`max-w-[80%] rounded-xl px-3.5 py-2.5 leading-relaxed shadow-md ${
@@ -88,7 +80,6 @@ const Chatbot = () => {
                         <div ref={chatEndRef} />
                     </div>
 
-                    {/* Footer interactive typing console input */}
                     <form onSubmit={handleSendMessage} className="p-3 bg-slate-950 border-t border-white/10 flex items-center gap-2">
                         <input 
                             type="text" 
@@ -98,11 +89,7 @@ const Chatbot = () => {
                             disabled={loading}
                             className="flex-1 bg-white/5 text-white border border-white/10 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-indigo-500 placeholder-white/30"
                         />
-                        <button 
-                            type="submit" 
-                            disabled={loading}
-                            className="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-3 py-2 rounded-lg transition text-xs"
-                        >
+                        <button type="submit" disabled={loading} className="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-3 py-2 rounded-lg transition text-xs">
                             Send
                         </button>
                     </form>

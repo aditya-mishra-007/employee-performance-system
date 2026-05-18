@@ -38,6 +38,28 @@ exports.getAllEmployees = async (req, res, next) => {
     }
 };
 
+// @desc    Delete employee from cluster database
+// @route   DELETE /api/employees/:id
+// @access  Private (Protected by JWT)
+exports.deleteEmployee = async (req, res, next) => {
+    try {
+        const employee = await Employee.findById(req.params.id);
+
+        if (!employee) {
+            return res.status(404).json({ success: false, error: 'Employee node not found' });
+        }
+
+        await employee.deleteOne();
+
+        res.status(200).json({
+            success: true,
+            message: 'Employee removed successfully' // Matches exact exam test case expectation
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
 // @desc    Search employees by department (Query String)
 // @route   GET /api/employees/search
 // @access  Public

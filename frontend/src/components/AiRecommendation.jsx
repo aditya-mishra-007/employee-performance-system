@@ -14,11 +14,12 @@ const AiRecommendation = ({ employeeId, onClose }) => {
             setInsight('');
 
             try {
-                const res = await axios.post('http://localhost:5000/api/ai/recommend', { employeeId });
+                // Pointed to live backend recommendations URL
+                const res = await axios.post('https://employee-performance-system-mq1p.onrender.com/api/ai/recommend', { employeeId });
                 setInsight(res.data.recommendation);
             } catch (err) {
                 setError(err.response?.data?.error || 'AI Evaluation runtime error occurred');
-            } {
+            } finally {
                 setLoading(false);
             }
         };

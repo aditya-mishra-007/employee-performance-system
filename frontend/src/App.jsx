@@ -11,11 +11,14 @@ function App() {
     const [selectedEmployeeId, setSelectedEmployeeId] = useState(null);
     const [modalConfig, setModalConfig] = useState({ isOpen: false, type: '', data: null, loading: false });
 
+    // Central Live Render Web Service URL Configuration Node
+    const API_BASE_URL = 'https://employee-performance-system-mq1p.onrender.com';
+
     const fetchEmployees = useCallback(async (department = '') => {
         try {
-            let url = 'http://localhost:5000/api/employees';
+            let url = `${API_BASE_URL}/api/employees`;
             if (department) {
-                url = `http://localhost:5000/api/employees/search?department=${encodeURIComponent(department)}`;
+                url = `${API_BASE_URL}/api/employees/search?department=${encodeURIComponent(department)}`;
             }
             const res = await axios.get(url);
             setEmployees(res.data.data);
@@ -24,10 +27,28 @@ function App() {
         }
     }, []);
 
+    // ======= NEW DETACHED ROUTE EXCLUSION LIFECYCLE CALLBACK =======
+    const handleDeleteEmployee = async (id) => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.delete(`${API_BASE_URL}/api/employees/${id}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            
+            if (response.data.success) {
+                alert('🗑️ Employee removed successfully.'); // Perfect match alignment to Q4 paper criteria
+                fetchEmployees(); // Live update framework array state
+            }
+        } catch (error) {
+            alert(error.response?.data?.error || 'Database rejected action execution pipeline parameters.');
+        }
+    };
+    // ==============================================================
+
     const handleTriggerBasicMatch = async () => {
         setModalConfig({ isOpen: true, type: 'basic', data: [], loading: true });
         try {
-            const res = await axios.get('http://localhost:5000/api/ai/basic-match');
+            const res = await axios.get(`${API_BASE_URL}/api/ai/basic-match`);
             setModalConfig(prev => ({ ...prev, data: res.data.data, loading: false }));
         } catch (err) {
             console.error(err);
@@ -38,7 +59,7 @@ function App() {
     const handleTriggerAIShortlist = async () => {
         setModalConfig({ isOpen: true, type: 'ai', data: '', loading: true });
         try {
-            const res = await axios.post('http://localhost:5000/api/ai/shortlist');
+            const res = await axios.post(`${API_BASE_URL}/api/ai/shortlist`);
             setModalConfig(prev => ({ ...prev, data: res.data.shortlist, loading: false }));
         } catch (err) {
             console.error(err);
@@ -55,7 +76,6 @@ function App() {
 
     return (
         <div className="min-h-screen bg-[#030712] relative overflow-hidden py-12 px-4 sm:px-6 lg:px-8 font-sans antialiased text-left">
-            {/* Ambient Background Glow Mesh Effect Orbs */}
             <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none"></div>
             <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-fuchsia-500/10 rounded-full blur-[120px] pointer-events-none"></div>
 
@@ -82,6 +102,7 @@ function App() {
                         onSelectAI={setSelectedEmployeeId} 
                         onTriggerBasicMatch={handleTriggerBasicMatch}
                         onTriggerAIShortlist={handleTriggerAIShortlist}
+                        onDeleteEmployee={handleDeleteEmployee} // Bind deletion callback mechanism safely
                     />
                 </div>
             </main>

@@ -19,7 +19,8 @@ const EmployeeForm = ({ fetchEmployees }) => {
         
         try {
             const token = localStorage.getItem('token');
-            await axios.post('http://localhost:5000/api/employees', {
+            // Wired directly to live backend URL
+            await axios.post('https://employee-performance-system-mq1p.onrender.com/api/employees', {
                 ...formData,
                 skills: formattedSkills,
                 performanceScore: Number(formData.performanceScore),

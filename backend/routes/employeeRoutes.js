@@ -17,4 +17,10 @@ router.route('/')
     .post(protect, addEmployee) // 2. Add 'protect' right here to secure employee creation
     .get(getAllEmployees);       // This remains public so anyone can view (or add protect here too if needed)
 
+    
+
+// Route matches: PUT /api/employees/:id and DELETE /api/employees/:id
+router.route('/:id')
+    .delete(protect, deleteEmployee); // Secures data elimination with JWT verification
+
 module.exports = router;

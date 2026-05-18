@@ -15,7 +15,6 @@ function App() {
 
     const API_BASE_URL = 'https://employee-performance-system-mq1p.onrender.com';
 
-    // Global Axios interceptor to append authorization tokens automatically
     useEffect(() => {
         if (token) {
             axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
@@ -83,8 +82,9 @@ function App() {
 
             <header className="max-w-7xl mx-auto mb-10 border-b border-white/5 pb-6 relative z-10 flex justify-between items-end">
                 <div>
+                    {/* 🔥 UPDATED: Academic text replaced with Professional text */}
                     <span className="text-[10px] font-black uppercase tracking-widest text-cyan-400 bg-cyan-400/10 px-3 py-1 rounded-full border border-cyan-500/20 shadow-[0_0_15px_rgba(6,182,212,0.1)]">
-                        B.Tech 4th SEMESTER EVALUATION ENDPOINT [2025-26]
+                        ENTERPRISE PERFORMANCE ANALYTICS PORTAL
                     </span>
                     <h1 className="text-4xl font-extrabold mt-3 text-white tracking-tight sm:text-5xl">
                         AI-Driven Employee Performance <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-indigo-300 to-fuchsia-400">Analytics System</span>
@@ -94,7 +94,6 @@ function App() {
                     </p>
                 </div>
                 
-                {/* 🔥 SIMPLIFIED LOGOUT BUTTON */}
                 <button 
                     onClick={handleLogout}
                     className="bg-red-500/10 hover:bg-red-600 border border-red-500/20 hover:border-transparent text-red-400 hover:text-white text-xs font-black px-5 py-2.5 rounded-xl transition duration-150 tracking-widest uppercase mb-1 shadow-[0_0_15px_rgba(239,68,68,0.05)] active:scale-95 cursor-pointer select-none"

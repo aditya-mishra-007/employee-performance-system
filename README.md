@@ -18,13 +18,14 @@ Built with a decoupled MERN architecture, secure authentication, and AI integrat
 
 ---
 
+
 ## 📸 Screenshots
 
 ### Dashboard / Employee Analytics
-<img src="<img width="1723" height="911" alt="image" src="https://github.com/user-attachments/assets/7da6d9a6-450c-49fd-859c-d2600142408b" />" width="70%" />
+<img src="https://github.com/user-attachments/assets/7da6d9a6-450c-49fd-859c-d2600142408b" width="70%" />
 
 ### AI Chatbot / Growth Insights
-<img src="<img width="404" height="513" alt="image" src="https://github.com/user-attachments/assets/37a844c9-785a-435d-b228-3653822b9553" />" width="40%" />
+<img src="https://github.com/user-attachments/assets/37a844c9-785a-435d-b228-3653822b9553" width="40%" />
 
 ---
 

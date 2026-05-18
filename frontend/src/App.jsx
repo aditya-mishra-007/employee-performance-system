@@ -94,11 +94,12 @@ function App() {
                     </p>
                 </div>
                 
+                {/* 🔥 SIMPLIFIED LOGOUT BUTTON */}
                 <button 
                     onClick={handleLogout}
-                    className="bg-red-500/10 hover:bg-red-600 border border-red-500/20 hover:border-transparent text-red-400 hover:text-white text-xs font-black px-5 py-2.5 rounded-xl transition duration-150 tracking-widest uppercase mb-1 shadow-[0_0_15px_rgba(239,68,68,0.05)] active:scale-95"
+                    className="bg-red-500/10 hover:bg-red-600 border border-red-500/20 hover:border-transparent text-red-400 hover:text-white text-xs font-black px-5 py-2.5 rounded-xl transition duration-150 tracking-widest uppercase mb-1 shadow-[0_0_15px_rgba(239,68,68,0.05)] active:scale-95 cursor-pointer select-none"
                 >
-                    Disconnect Session 🚪
+                    Logout 🚪
                 </button>
             </header>
 

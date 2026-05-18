@@ -22,11 +22,11 @@ const ShortlistModal = ({ type, data, onClose, loading }) => {
                         </div>
                     ) : type === 'basic' ? (
                         <div className="space-y-2">
-                            {data.length === 0 ? (
-                                <p className="text-white/40 text-sm text-center py-4">No employees currently match the $\ge 80$ score benchmark threshold.</p>
+                            {!data || data.length === 0 ? (
+                                <p className="text-white/40 text-sm text-center py-4">No employees currently match the performance benchmark threshold.</p>
                             ) : (
                                 data.map(emp => (
-                                    <div key={emp._id} className="flex justify-between items-center p-3.5 bg-white/5 rounded-xl border border-white/5">
+                                    <div key={emp._id} className="flex justify-between items-center p-3.5 bg-white/5 rounded-xl border border-white/5 text-left">
                                         <div>
                                             <h4 className="font-bold text-sm text-white">{emp.name}</h4>
                                             <p className="text-white/40 text-xs">{emp.department} • {emp.experience} Years Exp</p>
@@ -39,7 +39,7 @@ const ShortlistModal = ({ type, data, onClose, loading }) => {
                             )}
                         </div>
                     ) : (
-                        <div className="whitespace-pre-line text-sm leading-relaxed text-slate-300 bg-white/[0.02] border border-white/5 p-5 rounded-xl">
+                        <div className="whitespace-pre-line text-sm leading-relaxed text-slate-300 bg-white/[0.02] border border-white/5 p-5 rounded-xl text-left">
                             {data}
                         </div>
                     )}

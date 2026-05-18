@@ -22,7 +22,7 @@ const UserSchema = new mongoose.Schema({
     timestamps: true
 });
 
-// FIX: Removed 'next' parameter. Modern Mongoose automatically handles async promises!
+// Automate asynchronous bcrypt hashing before doc storage
 UserSchema.pre('save', async function () {
     if (!this.isModified('password')) {
         return;
@@ -31,7 +31,7 @@ UserSchema.pre('save', async function () {
     this.password = await bcrypt.hash(this.password, salt);
 });
 
-// Instance method to compare passwords during login
+// Instance method called directly during credential lookup
 UserSchema.methods.matchPassword = async function (enteredPassword) {
     return await bcrypt.compare(enteredPassword, this.password);
 };

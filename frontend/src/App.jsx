@@ -5,7 +5,7 @@ import EmployeeList from './components/EmployeeList';
 import AiRecommendation from './components/AiRecommendation';
 import Chatbot from './components/Chatbot';
 import ShortlistModal from './components/ShortlistModal';
-import Login from './components/Login'; // Import Login view wrapper
+import AuthPage from './components/AuthPage';
 
 function App() {
     const [token, setToken] = useState(localStorage.getItem('token'));
@@ -14,6 +14,15 @@ function App() {
     const [modalConfig, setModalConfig] = useState({ isOpen: false, type: '', data: null, loading: false });
 
     const API_BASE_URL = 'https://employee-performance-system-mq1p.onrender.com';
+
+    // Global Axios interceptor to append authorization tokens automatically
+    useEffect(() => {
+        if (token) {
+            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        } else {
+            delete axios.defaults.headers.common['Authorization'];
+        }
+    }, [token]);
 
     const fetchEmployees = useCallback(async (department = '') => {
         if (!token) return;
@@ -25,7 +34,7 @@ function App() {
             const res = await axios.get(url);
             setEmployees(res.data.data);
         } catch (error) {
-            console.error('Core collection sync error:', error);
+            console.error('Data layer synchronization exception:', error);
         }
     }, [token]);
 
@@ -53,7 +62,7 @@ function App() {
             setModalConfig(prev => ({ ...prev, data: res.data.shortlist, loading: false }));
         } catch (err) {
             console.error(err);
-            setModalConfig(prev => ({ ...prev, data: 'Connection pipeline failure parsing database records.', loading: false }));
+            setModalConfig(prev => ({ ...prev, data: 'Connection pipeline failure parsing records.', loading: false }));
         }
     };
 
@@ -63,9 +72,8 @@ function App() {
         }
     }, [token, fetchEmployees]);
 
-    // Conditional Routing: Render Auth view wrapper if token is absent
     if (!token) {
-        return <Login onLoginSuccess={(newToken) => setToken(newToken)} />;
+        return <AuthPage onAuthSuccess={(newToken) => setToken(newToken)} />;
     }
 
     return (
@@ -86,7 +94,6 @@ function App() {
                     </p>
                 </div>
                 
-                {/* High-Contrast Interactive Logout Action Button Component */}
                 <button 
                     onClick={handleLogout}
                     className="bg-red-500/10 hover:bg-red-600 border border-red-500/20 hover:border-transparent text-red-400 hover:text-white text-xs font-black px-5 py-2.5 rounded-xl transition duration-150 tracking-widest uppercase mb-1 shadow-[0_0_15px_rgba(239,68,68,0.05)] active:scale-95"

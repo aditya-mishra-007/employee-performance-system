@@ -60,7 +60,7 @@ const AuthPage = ({ onAuthSuccess }) => {
                     {!isLoginView && (
                         <div>
                             <label className="block text-cyan-400/70 text-[11px] font-bold uppercase tracking-widest mb-1.5">Full Name</label>
-                            <input type="text" value={name} onChange={(e) => setName(e.target.value)} required className="w-full bg-[#020617]/80 border border-white/10 text-white rounded-xl px-4 py-3 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 text-sm transition-all" placeholder="Aditya Mishra" />
+                            <input type="text" value={name} onChange={(e) => setName(e.target.value)} required className="w-full bg-[#020617]/80 border border-white/10 text-white rounded-xl px-4 py-3 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 text-sm transition-all" placeholder="Enter Name" />
                         </div>
                     )}
 

@@ -5,16 +5,18 @@ import EmployeeList from './components/EmployeeList';
 import AiRecommendation from './components/AiRecommendation';
 import Chatbot from './components/Chatbot';
 import ShortlistModal from './components/ShortlistModal';
+import Login from './components/Login'; // Import Login view wrapper
 
 function App() {
+    const [token, setToken] = useState(localStorage.getItem('token'));
     const [employees, setEmployees] = useState([]);
     const [selectedEmployeeId, setSelectedEmployeeId] = useState(null);
     const [modalConfig, setModalConfig] = useState({ isOpen: false, type: '', data: null, loading: false });
 
-    // Central Live Render Web Service URL Configuration Node
     const API_BASE_URL = 'https://employee-performance-system-mq1p.onrender.com';
 
     const fetchEmployees = useCallback(async (department = '') => {
+        if (!token) return;
         try {
             let url = `${API_BASE_URL}/api/employees`;
             if (department) {
@@ -25,25 +27,13 @@ function App() {
         } catch (error) {
             console.error('Core collection sync error:', error);
         }
-    }, []);
+    }, [token]);
 
-    // ======= NEW DETACHED ROUTE EXCLUSION LIFECYCLE CALLBACK =======
-    const handleDeleteEmployee = async (id) => {
-        try {
-            const token = localStorage.getItem('token');
-            const response = await axios.delete(`${API_BASE_URL}/api/employees/${id}`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            
-            if (response.data.success) {
-                alert('🗑️ Employee removed successfully.'); // Perfect match alignment to Q4 paper criteria
-                fetchEmployees(); // Live update framework array state
-            }
-        } catch (error) {
-            alert(error.response?.data?.error || 'Database rejected action execution pipeline parameters.');
-        }
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        setToken(null);
+        setEmployees([]);
     };
-    // ==============================================================
 
     const handleTriggerBasicMatch = async () => {
         setModalConfig({ isOpen: true, type: 'basic', data: [], loading: true });
@@ -68,27 +58,41 @@ function App() {
     };
 
     useEffect(() => {
-        if (!localStorage.getItem('token')) {
-            localStorage.setItem('token', 'Mock_Bypass');
+        if (token) {
+            fetchEmployees();
         }
-        fetchEmployees();
-    }, [fetchEmployees]);
+    }, [token, fetchEmployees]);
+
+    // Conditional Routing: Render Auth view wrapper if token is absent
+    if (!token) {
+        return <Login onLoginSuccess={(newToken) => setToken(newToken)} />;
+    }
 
     return (
         <div className="min-h-screen bg-[#030712] relative overflow-hidden py-12 px-4 sm:px-6 lg:px-8 font-sans antialiased text-left">
             <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none"></div>
             <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-fuchsia-500/10 rounded-full blur-[120px] pointer-events-none"></div>
 
-            <header className="max-w-7xl mx-auto mb-10 border-b border-white/5 pb-6 relative z-10">
-                <span className="text-[10px] font-black uppercase tracking-widest text-cyan-400 bg-cyan-400/10 px-3 py-1 rounded-full border border-cyan-500/20 shadow-[0_0_15px_rgba(6,182,212,0.1)]">
-                    B.Tech 4th SEMESTER EVALUATION ENDPOINT [2025-26]
-                </span>
-                <h1 className="text-4xl font-extrabold mt-3 text-white tracking-tight sm:text-5xl">
-                    AI-Driven Employee Performance <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-indigo-300 to-fuchsia-400">Analytics System</span>
-                </h1>
-                <p className="text-slate-400 text-sm mt-2 max-w-xl font-medium">
-                    Fully responsive production dashboard integrated with multi-layer schemas and public router pipelines.
-                </p>
+            <header className="max-w-7xl mx-auto mb-10 border-b border-white/5 pb-6 relative z-10 flex justify-between items-end">
+                <div>
+                    <span className="text-[10px] font-black uppercase tracking-widest text-cyan-400 bg-cyan-400/10 px-3 py-1 rounded-full border border-cyan-500/20 shadow-[0_0_15px_rgba(6,182,212,0.1)]">
+                        B.Tech 4th SEMESTER EVALUATION ENDPOINT [2025-26]
+                    </span>
+                    <h1 className="text-4xl font-extrabold mt-3 text-white tracking-tight sm:text-5xl">
+                        AI-Driven Employee Performance <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-indigo-300 to-fuchsia-400">Analytics System</span>
+                    </h1>
+                    <p className="text-slate-400 text-sm mt-2 max-w-xl font-medium">
+                        Fully responsive production dashboard integrated with multi-layer schemas and public router pipelines.
+                    </p>
+                </div>
+                
+                {/* High-Contrast Interactive Logout Action Button Component */}
+                <button 
+                    onClick={handleLogout}
+                    className="bg-red-500/10 hover:bg-red-600 border border-red-500/20 hover:border-transparent text-red-400 hover:text-white text-xs font-black px-5 py-2.5 rounded-xl transition duration-150 tracking-widest uppercase mb-1 shadow-[0_0_15px_rgba(239,68,68,0.05)] active:scale-95"
+                >
+                    Disconnect Session 🚪
+                </button>
             </header>
 
             <main className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative z-10">
@@ -102,7 +106,6 @@ function App() {
                         onSelectAI={setSelectedEmployeeId} 
                         onTriggerBasicMatch={handleTriggerBasicMatch}
                         onTriggerAIShortlist={handleTriggerAIShortlist}
-                        onDeleteEmployee={handleDeleteEmployee} // Bind deletion callback mechanism safely
                     />
                 </div>
             </main>

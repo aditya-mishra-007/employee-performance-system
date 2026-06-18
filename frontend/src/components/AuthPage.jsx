@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react'; // 🔥 Updated to include useEffect
 import axios from 'axios';
 
 const AuthPage = ({ onAuthSuccess }) => {
@@ -8,6 +8,13 @@ const AuthPage = ({ onAuthSuccess }) => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+
+    // 🔥 NEW: Instant Background Pre-Warm Hook to eliminate Render container spin-up lag
+    useEffect(() => {
+        axios.get('https://employee-performance-system-mq1p.onrender.com/')
+            .then(() => console.log("Backend engine successfully pre-warmed."))
+            .catch((err) => console.log("Pre-warm wake-up signal transmitted. Responding shortly..."));
+    }, []);
 
     const handleFormSubmit = async (e) => {
         e.preventDefault();
@@ -43,7 +50,6 @@ const AuthPage = ({ onAuthSuccess }) => {
                     <span className="text-[10px] font-black uppercase tracking-widest text-cyan-400 bg-cyan-400/10 px-3 py-1 rounded-full border border-cyan-500/20">
                         {isLoginView ? 'Authentication Gate' : 'Registration Node'}
                     </span>
-                    {/* 🔥 PREMIUM HIGH-TECH HEADINGS */}
                     <h2 className="text-2xl font-extrabold mt-4 tracking-tight">
                         {isLoginView ? 'Initialize Session' : 'Create Account'}
                     </h2>
@@ -76,13 +82,12 @@ const AuthPage = ({ onAuthSuccess }) => {
                         <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} className="w-full bg-[#020617]/80 border border-white/10 text-white rounded-xl px-4 py-3 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 text-sm transition-all" placeholder="••••••••••••" />
                     </div>
 
-                    {/* 🔥 HIGH-IMPACT BUTTON LABEL */}
-                    <button type="submit" disabled={loading} className="w-full bg-gradient-to-r from-cyan-500 via-indigo-500 to-fuchsia-500 hover:opacity-90 disabled:opacity-50 text-white font-bold py-3.5 rounded-xl transition shadow-[0_4px_20px_rgba(6,182,212,0.3)] text-sm tracking-widest uppercase mt-2">
-                        {loading ? 'Processing...' : isLoginView ? 'Authorize & Enter' : 'Create Account'}
+                    {/* 🔥 UPDATED: Dynamic Button text lets the user know the server is spinning up */}
+                    <button type="submit" disabled={loading} className="w-full bg-gradient-to-r from-cyan-500 via-indigo-500 to-fuchsia-500 hover:opacity-90 disabled:opacity-50 text-white font-bold py-3.5 rounded-xl transition shadow-[0_4px_20px_rgba(6,182,212,0.3)] text-sm tracking-widest uppercase mt-2 cursor-pointer select-none">
+                        {loading ? 'Waking up cloud server & verifying...' : isLoginView ? 'Authorize & Enter' : 'Create Account'}
                     </button>
                 </form>
 
-                {/* 🔥 CLEAN INTERACTIVE TOGGLE TEXT */}
                 <div className="mt-6 text-center border-t border-white/5 pt-5 flex justify-center">
                     <button 
                         onClick={() => { setIsLoginView(!isLoginView); setError(''); }} 
